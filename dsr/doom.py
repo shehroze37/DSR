@@ -10,13 +10,7 @@
 # 
 #####################################################################
 from __future__ import print_function
-from vizdoom import DoomGame
-from vizdoom import Mode
-from vizdoom import Button
-from vizdoom import GameVariable
-from vizdoom import ScreenFormat
-from vizdoom import ScreenResolution
-# Or just use from vizdoom import *
+from vizdoom import *
 
 from random import choice
 from time import sleep
@@ -35,48 +29,61 @@ game = DoomGame()
 #game.load_config("../../examples/config/basic.cfg")
 
 # Sets path to vizdoom engine executive which will be spawned as a separate process. Default is "./vizdoom".
-game.set_vizdoom_path("bin/vizdoom")
+main_extension = '../../ViZDoom/'
+game.set_vizdoom_path(main_extension + "bin/vizdoom")
 
 # Sets path to doom2 iwad resource file which contains the actual doom game. Default is "./doom2.wad".
 # game.set_doom_game_path("scenarios/freedoom2.wad")
-game.set_doom_game_path("scenarios/DOOM2.WAD")
+game.set_doom_game_path(main_extension + "scenarios/freedoom2.WAD")
 
 #game.set_doom_game_path("../../scenarios/doom2.wad")  # Not provided with environment due to licences.
 
 # Sets path to additional resources iwad file which is basically your scenario iwad.
 # If not specified default doom2 maps will be used and it's pretty much useles... unless you want to play doom.
 # game.set_doom_scenario_path("scenarios/basic.wad")
-game.set_doom_scenario_path("scenarios/2roomsbest.wad")
+game.set_doom_scenario_path(main_extension + "scenarios/deathmatch.wad")
+game.set_death_penalty(100)
+
 
 # Sets map to start (scenario .wad files can contain many maps).
 game.set_doom_map("map01")
 
 # Sets resolution. Default is 320X240
-# game.set_screen_resolution(ScreenResolution.RES_640X480)
+game.set_screen_resolution(ScreenResolution.RES_640X480)
+game.set_screen_format(ScreenFormat.GRAY8)
 
 # Sets the screen buffer format. Not used here but now you can change it. Defalut is CRCGCB.
 
 # Sets other rendering options
 game.set_render_hud(False)
 game.set_render_crosshair(False)
-game.set_render_weapon(True)
+game.set_render_weapon(False)
 game.set_render_decals(False)
 game.set_render_particles(False)
 
 # Adds buttons that will be allowed. 
-# game.add_available_button(Button.MOVE_LEFT)
-# game.add_available_button(Button.MOVE_RIGHT)
-game.add_available_button(Button.MOVE_FORWARD)
-game.add_available_button(Button.TURN_LEFT)
-game.add_available_button(Button.TURN_RIGHT)
-# game.add_available_button(Button.TURN180)
-# game.add_available_button(Button.ATTACK)
-game.add_available_button(Button.USE)
 
-# game.add_available_button(Button.ATTACK)
+game.add_available_button(Button.ATTACK)
+game.add_available_button(Button.SPEED)
+game.add_available_button(Button.MOVE_RIGHT)
+game.add_available_button(Button.MOVE_LEFT)
+game.add_available_button(Button.MOVE_BACKWARD)
+game.add_available_button(Button.MOVE_FORWARD)
+game.add_available_button(Button.TURN_RIGHT)
+game.add_available_button(Button.TURN_LEFT)
+game.add_available_button(Button.SELECT_WEAPON5)
+
 
 # Adds game variables that will be included in state.
-game.add_available_game_variable(GameVariable.AMMO2)
+game.add_available_game_variable(GameVariable.HEALTH )
+game.add_available_game_variable(GameVariable.KILLCOUNT )
+game.add_available_game_variable(GameVariable.FRAGCOUNT )
+game.add_available_game_variable(GameVariable.SELECTED_WEAPON )
+game.add_available_game_variable(GameVariable.SELECTED_WEAPON_AMMO )
+game.add_available_game_variable(GameVariable.ARMOR )
+
+
+
 
 # Causes episodes to finish after 200 tics (actions)
 game.set_episode_timeout(5000)
@@ -119,7 +126,17 @@ game.init()
 # [False,False,False,False, True]]
 
 
-actions=[[True,False,False, False], [False,True , False, False],[False,False, True, False], [False,False, False,  True]]
+#actions=[[True,False,False, False], [False,True , False, False],[False,False, True, False], [False,False, False,  True]]
+actions = []
+n = 9
+actions.append([0] * n)
+for i in range(0,n):
+    action = [0] * n
+    action[i] = 1
+    actions.append(action)
+
+print(actions)    
+
 
 # Sets time that will pause the engine after each action.
 # Without this everything would go too fast for you to keep track of what's happening.
